@@ -1,14 +1,14 @@
 Hi 👋 My name is Tarique Shamim
 ===============================
 
-Lead Consultant
+Backend Engineer
 ---------------
 
-I've been working on Go Programming and Salesforce. I have deep knowledge of integrating third-party applications on Platforms like Hubspot, Salesforce, Shopify, etc. I've Good knowledge of Salesforce CRM, its concepts, and programming in Apex. Also, I've Intermediate-level knowledge in JavaScript, Postgres, HTML, and a good understanding of Modern JS. Learning AWS and am also a beginner in DevOps.
+I've been working with Go Programming, AWS and Salesforce. I have deep knowledge of integrating third-party applications on Platforms like Hubspot, Salesforce, Shopify, etc. I've Good knowledge of Salesforce CRM, its concepts, and programming in Apex. Also, I've Intermediate-level knowledge in JavaScript, Postgres, HTML, and a good understanding of Modern JS. Learning AWS and am also a beginner in DevOps.
 
 * 🌍  I'm based in Lucknow
 * ✉️  You can contact me at [tariqueshamim@outlook.com](mailto:tariqueshamim@outlook.com)
-* 🧠  I'm learning AWS, DevOps
+* 🧠  I'm learning/working on AWS, DevOps
 
 <a href="https://www.twitter.com/soul_in_code" target="_blank" rel="noreferrer"><img
 src="https://img.shields.io/twitter/follow/soul_in_code?logo=twitter&style=for-the-badge&color=0891b2&labelColor=1c1917"
