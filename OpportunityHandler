@@ -1,0 +1,83 @@
+public class OpportunityHandler {
+  
+  // Constant for the opportunity stage when closed won
+  public static final String OPPORTUNITY_STAGE_CLOSED_WON = 'Closed Won';
+
+  /**
+   * Calculates and updates the total expected revenue for a list of opportunities
+   * based on their associated OpportunityLineItems.
+   *
+   * @param opportunities List of Opportunity records to calculate revenue for.
+   */
+  public static void calculateAndUpdateOpportunityRevenue(
+    List<Opportunity> opportunities
+  ) {
+    // Map to hold total expected revenue for each opportunity
+    Map<Id, Decimal> opportunityRevenueMap = new Map<Id, Decimal>();
+
+    // Query OpportunityLineItems related to the opportunities
+    List<OpportunityLineItem> lineItems = [
+      SELECT Id, OpportunityId, Quantity, UnitPrice, Product2Id
+      FROM OpportunityLineItem
+      WHERE OpportunityId IN :opportunities
+      WITH SYSTEM_MODE
+    ];
+
+    // Calculate expected revenue
+    for (OpportunityLineItem lineItem : lineItems) {
+      Decimal revenue = lineItem.Quantity * lineItem.UnitPrice;
+
+      // Accumulate revenue by OpportunityId
+      if (!opportunityRevenueMap.containsKey(lineItem.OpportunityId)) {
+        opportunityRevenueMap.put(lineItem.OpportunityId, 0);
+      }
+      opportunityRevenueMap.put(
+        lineItem.OpportunityId,
+        opportunityRevenueMap.get(lineItem.OpportunityId) + revenue
+      );
+    }
+
+    // Update each opportunity with the total expected revenue
+    for (Opportunity opp : opportunities) {
+      if (opportunityRevenueMap.containsKey(opp.Id)) {
+        opp.Total_Expected_Revenue__c = opportunityRevenueMap.get(opp.Id);
+      } else {
+        opp.Total_Expected_Revenue__c = 0; // If no line items, set to 0
+      }
+    }
+  }
+
+  /**
+   * Updates the stage of the opportunities based on specific criteria:
+   * 1. The expected close date is within the next 30 days.
+   * 2. The opportunity amount exceeds a defined threshold.
+   *
+   * @param opportunities List of Opportunity records to evaluate and update stages for.
+   */
+  public static void updateOpportunityStages(List<Opportunity> opportunities) {
+    // Define the threshold amount
+    Decimal thresholdAmount = 10000; // Set your threshold value here
+
+    // Get today's date and calculate the date 30 days from now
+    Date today = Date.today();
+    Date closingDateLimit = today.addDays(30);
+
+    // Iterate over the opportunities to check criteria
+    for (Opportunity opp : opportunities) {
+      // Check if the expected close date is within the next 30 days
+      Boolean isCloseDateWithin30Days =
+        opp.CloseDate != null &&
+        opp.CloseDate <= closingDateLimit;
+
+      // Check if the opportunity amount exceeds the threshold
+      Boolean isAmountExceedsThreshold =
+        opp.Amount != null &&
+        opp.Amount > thresholdAmount;
+
+      // Update the stage if both conditions are met
+      if (isCloseDateWithin30Days && isAmountExceedsThreshold) {
+        opp.StageName = OPPORTUNITY_STAGE_CLOSED_WON; // Update to the desired stage
+      }
+    }
+  }
+}
